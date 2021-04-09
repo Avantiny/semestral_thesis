@@ -1,0 +1,1 @@
+Tato semestrální práce vznikla ke konci roku 2019 jako předchůdce mé bakalářské práce.

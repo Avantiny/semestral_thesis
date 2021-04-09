@@ -1,0 +1,207 @@
+\chapter{Postup vytvoření vlastní aplikace}
+
+\section{Back-end a databáze}
+\subsection{Příprava pro vlastní implementaci}
+V této sekci je popsáno vytvoření serveru s REST API, který bude naslouchat front-endu a získávat data z databáze. Do složky Back-end byl pomocí příkazu npm init vytvořen repozitář package.json systému node.js. Poté byly nainstalovány knihovny ESLint a Prettier. Příkazy pro instalaci knihoven jsou velmi jednoduše dohledatelné na stránkách výrobců či na serveru github.com. V případě, že některé knihovny nejsou nainstalovány, ale jejich jména jsou součástí souboru package.json, lze příkazem „npm i“ tyto knihovny hromadně stáhnout. Některé knihovny ve výchozím stavu podporují datové typy, u jiných je potřeba instalaci zohlednit pro TypeScript (většinou pomocí předpony @types).
+
+ Ve složce Back-end byla vytvořena složka .vscode se souborem settings.json, ve kterém bylo nastaveno provedení funkcí knihovny ESLint a Prettier na každé uložení aplikace. Tato funkce zjednodušuje práci programátora, standardizuje a zpřehledňuje kód. Knihovny, které slouží vývojářům se označují jako "devDependencies" a ukládají se do vlastní sekce v souboru package.json. Knihovny nutné k běhu programu se označují jako "dependencies". Aby vše fungovalo, bylo nutné ještě vytvořit soubory .prettierrc.js a .eslintrc.js, ve kterých byly nakonfigurovány jednotlivé funkce těchto knihoven. Dále byl nakonfigurován TypeScript pomocí souboru tsconfig.json. Poté byla jako další knihovna pro vývojáře nainstalována knihovna ts-node-dev, sloužící ke spouštění zdrojových kódů v TypeScriptu při každém uložení. Tento postup byl ve složce front-end zduplikován.
+
+Pro samotný back-end byly dále nainstalovány knihovny:
+\begin{itemize}
+\item core-ts
+\item cors
+\item express
+\item node
+\end{itemize}
+
+
+\subsection{Spuštění jednoduchého back-end serveru}
+Následovně byla vytvořena složka "src" se souborem main.ts.
+
+Pro spuštění serveru využijeme knihovnu Express. V souboru, kde chce vývojář danou knihovnu použít, lze využít dva způsoby připojení knihovny:
+\begin{itemize}
+\item klíčové slovo "import" - podporováno prohlížeči a jazykem TypeScript
+\item klíčové slovo "require" - podporováno systémem node.js
+\end{itemize}
+
+
+Pro spuštění back-endového serveru na námi zvoleném portu (adresa portu byla zvolena 3001) je tedy nutné využít v souboru main.ts následující příkazy:
+\begin{lstlisting}
+import * as express from 'express'
+const app = express()
+const port = 3001
+\end{lstlisting}
+Vzhledem k tomu, že front-end poběží na jiném portu než back-end, je nutné umožnit těmto různým doménám komunikaci. Jako další byla tedy nainstalována a naimportována knihovna CORS. Pomocí jednoduchého kódu:
+\begin{lstlisting}
+app.use(cors())
+\end{lstlisting}
+byla umožněna serveru komunikace s jakýmkoliv jiným serverem. Pomocí systému whitelist/blacklist je také možné přímo nastavit, kdo může data ze serveru přijímat a kdo ne. Nyní je back-end aplikace schopná komunikovat s front-endem.
+
+\subsection{Databázové modely}
+Je nutné, aby tabulky v databázi splňovaly zvolené schéma a také je potřeba je vzájemně propojit. K tomuto účelu byly vytvořeny databázové modely AssetsModel, TagsModel a TagsAssetsModel, ve kterých je definována struktura dané tabulky a také jejich asociace. Celý model se bude exportovat jakožto šablona pro vytváření reálné databáze. V této definici jsou obsaženy objekty s předdefinovaným datovým typem. Pro model "AssetsModel" vypadá soubor následovně:
+\begin{lstlisting}
+//import celého obsahu knihovny Seqzelize
+import * as Sequelize from 'sequelize'
+
+//metoda jazyka TypeScript. 
+//výčet hodnot možných typů assetů
+export enum AssetType {
+  Video = 'Video',
+  Image = 'Image',
+}
+
+ //parametr "sequelize" je objektem třídy 
+ //Sequelize z knihovny Sequelize
+export default (sequelize: Sequelize.Sequelize, DataTypes: any) => 
+//definuje název tabulky, počet a název sloupců, včetně datového typu
+  const AssetsModel = sequelize.define('assets', { 
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+   },
+    name: {
+      type: DataTypes.STRING,
+    },
+    type: {
+      type: DataTypes.STRING,
+    },
+    creation_year: {
+      type: DataTypes.INTEGER,
+    },
+    src: {
+      type: DataTypes.STRING,
+    },
+  })
+
+ //metoda pro propojení tabulek
+ AssetsModel.associate = models => {
+
+ //1:N vazba na vazební tabulku
+    models.Assets.hasMany(models.TagsAssets, {
+      foreignKey: 'asset_id',
+      sourceKey: 'id',
+      constraints: false,
+    })
+ }
+  return AssetsModel
+}
+\end{lstlisting}
+
+\subsection{Zdrojová data pro databázi}
+Data z knihoven pro obrázky a videa je potřeba převést do databáze MariaDB. Databáze Open Images Dataset disponuje i vymaskovanými objekty a označením objektů do obdélníků pro strojové učení. Pro účely semestrální práce je však nutné získat data jen pro tři tabulky v databázi. V sekci Download na stránkách
+
+https://storage.googleapis.com/openimages/web budou tedy staženy ze sekce Validation, která obsahuje 41 620 obrázků, následující soubory:
+
+\begin{itemize}
+\item Image IDs - obsahuje kromě jiných informací ID obrázků a URL adresy k jednotlivým obrázkům, tudíž bude sloužit jako tabulka "Assets"
+\item Image labels - vazební tabulka, obsahuje v M:N poměru položky z tabulky "Tags" a "Assets"
+\item Class names - obsahuje názvy jednotlivých tagů a jejich ID, tudíž bude sloužit jako tabulka "Tags"
+\item Set of boxable classes - JSON soubor obsahující hierarchii tagů
+\end{itemize}
+
+Pro videa z http://www.thumos.info ze sekce Download budou použity dva soubory. ID videí bude nutné uměle vytvořit, vazba je popsána v názvech souborů:
+
+\begin{itemize}
+\item UCF101 videos (individual files): [Link] - obsahuje URL adresy k jednotlivým videím, které budou přehrány pomocí prohlížeče, tudíž bude sloužit jako tabulka "Assets"
+\item Class-level attributes - obsahuje data pro vazební tabulku i pro tabulku "Tags"
+\end{itemize}
+
+\subsection{Úprava zdrojových dat}
+Aby bylo možné data sjednotit do tří tabulek, je nutné prvně zpracovat zdrojové soubory, které jsou nekonzistentní. Z tohoto důvodu byl vytvořen soubor "loadAndParseData.ts", obsahující metody, které konvertují jakoukoliv podobu vstupních dat do formátu JSON, se kterým lze dále pracovat. V tomto souboru byla také vytvořena funkce getRandomYear, která vytváří falešný rok výroby v rozsahu 1900 až 2020. Tato funkce slouží k umělému vytvoření dat, ve kterých je logické využít výběr z rozsahu.
+
+\subsubsection{Obrázky}
+Pro zpracování souborů s příponou .csv, což jsou všechny soubory s údaji o obrázcích (kromě hierarchie, která je JSON), lze využít knihovnu "csvtojson/v2", která, jak již název napovídá, převádí soubory s příponou .csv na formát JSON. V této fázi tvorby je třeba si stále uvědomovat, jak daná data vypadají a jak je možné je ve výsledku propojit, aby jejich příprava dávala smysl pro připravené databázové modely. Soubory sloužící jako "Tags" a "Assets" disponují svými unikátními ID, které lze potom využít ve vazební tabulce. V každé metodě v poli headers, byly vyplněny názvy kategorií všech reálných položek v daných .csv souborech. Výstupem těchto metod jsou však pouze data relevantní pro pozdější využití.
+
+\subsubsection{Videa}
+Pro videa je operace složitější, neboť jejich data nejsou rozčleněna do na první pohled jasně propojitelných sekcí. Při otevření souboru "Class-level attributes" se zobrazí tabulka, jejiž řádky jsou popsány jednotlivými názvy tags a jejich sloupce jednotlivými názvy assets. Celý vnitřek tabulky tvoří potom nuly a jedničky, které vyjadřují, jestli se daný tag v assetu nachází. Tudíž tabulka dohromady obsahuje názvy tags, assets i vazební tabulku. Chybí v ní však url adresy jednotlivých videí. 
+
+Tyto adresy je možné získat z http://www.thumos.info ze sekce Download, konkrétně UCF101 videos (individual files): [Link], kde se nachází seznam odkazů pro stažení videí. Po rychlém prozkoumání chování stránky došlo k zjištění, že při doplnění názvu videa za lomítko URL adresy se dané video stáhne. Tudíž stačí celou stránku zkopírovat jako textový soubor, protože v něm jsou obsaženy veškeré nutné údaje pro účely semestrální práce. S textovými soubory je možné v JavaScriptu pracovat pomocí knihovny fs, která je schopna je přečíst. Poté už byly jen oba soubory zpracovány do vhodných formátů. Textový soubor byl zbaven přebytečných znaků metodou split. Tabulka byla podle binárního kritéria profiltrována tak, aby k danému assetu připojila výčet tagů, které reálně má.
+
+\subsection{Vytvoření Databáze}
+Po stažení a instalaci databáze MariaDB byla vytvořena databáze pomocí grafického klienta HeidiSQL. Pro tento účel je možné zvolit také příkazovou řádku. Při tvorbě databáze je nutné vyplnit následující údaje:
+
+\begin{itemize}
+\item Hostitel/IP - 127.0.0.1 (localhost)
+\item Uživatel - root
+\item Heslo
+\item Port - 3306 (výchozí)
+\item Název databáze - semestralniPrace.db
+\end{itemize}
+
+%změna
+Pro možnost přístupu do databáze skrz aplikaci pro back-end byl vytvořen soubor "env-config.ts", který uchovává přihlašovací údaje pro přístup k databázi. Tyto přístupové údaje jsou zpracovány v souboru core.ts. V tomto souboru se nachází konfigurace objektově relačního mapování prostřednictvím knihovny Sequelize. Při zavolání metody sequelize.authenticate() je možné vyzkoušet připojení k databázi. Objekt models uchovává obsah databázových modelů a konfiguraci objektu sequelize. Pomocí následující funkce jsou realizovány vazby mezi jednotlivými modely. Objekt models je ze souboru exportován.
+
+\subsection{Skript pro zpracování souborů do databáze}
+Skript dbLoadData je možné spustit příkazem "npm run db:load-data". Data, která jsou nyní ve vhodném formátu pro zpracování, rozdělí do tabulek a pomocí objektově relačního mapování jimi naplní databázi. V databázi budou tedy tři tabulky, kde v jedné jsou informace o obrázcích a videích, v druhé jsou jejich tagy a třetí obsahuje jejich vazbu. Všechny metody z předchozího souboru "loadAndParseData.ts" jsou do "dbLoadData" naimportovány přes klíčové slovo "import". 
+
+Zatímco obrázky i jejich tagy disponují svým vlastním unikátním ID, u videí tomu tak není, tudíž je potřeba jim ID uměle vytvořit. K tomuto účelu lze použít např. knihovnu shortid. Tyto ID byly v jednotlivých metodách přidány videím, i jejich tagům. Všechny metody v první části skriptu slouží k úpravě dat tak, aby byly vhodné pro nasazení do databáze, z čehož nejsložitější proces nastává u vazební tabulky pro videa, kde byla data sloučena pomocí matice s objekty, která byla funkcí .flat() ochuzena o jednu dimenzi tak, aby z ní zůstaly pouze vazby uměle vytvořených  ID videí a ID jejich tagů.
+
+Celý tento skript má ve výsledku tři fáze. V první fázi dojde k restartování databáze pomocí metody knihovny Sequelize - sequelize.sync({ force: true }), která resetuje databázi a umožní programu přepisovat data. V druhé fázi jsou volány funkce skriptu loadAndParseData. Ve třetí fázi jsou použitelná data finalizována a zaslána do databáze. Nahrávání do databáze je možné optimalizovat metodou knihovny Sequelize bulkCreate, která data posílá ve velkém množství najednou, místo toho, aby byla data nahrávána po jedné položce. Vzledem k tomu, že program nebyl schopen zaslat celou databázi najednou, bylo nutné použít metodu slice, která umožnila zasílání po menších částech (po statisících položek).
+
+\subsection{Funkce main()}
+Nyní, když jsou data nahrána v databázi, je nutné definovat, jak se s nimi bude nakládat a co přesně budou vracet při přijmutí requestu. Aby aplikace naslouchala možným requestům, je nutné využít metodu app.listen(). Vzhledem k tomu, že aplikace data pouze zobrazuje, je jediným nutným typem requestu get. Tyto requesty jsou namířeny na určitou URL adresu zvanou "endpoint". Práci s těmito endpointy ulehčuje knihovna Express, díky které je jednoduše možné nadefinovat, jak se bude back-end při jakém requestu na jaký endpoint chovat. Vývoj této části back-endu reálně probíhal paralelně s vývojem front-endu, tudíž se zatím důvody volby chování back-endu na jednotlivých endpointech mohou jevit jako neopodstatněné. Jejich propojení s front-endem je popsáno v kapitole "Struktura hlavního souboru". V aplikaci jsou využívány endpointy:
+
+\begin{itemize}
+\item /tags - vrací seznam dat tabulky tags
+\item /assets/:assetId/tags - podle ID assetu vrátí seznam tagů
+\item /assets/fulltext - podle nastavených parametrů v requestu ovlivňuje zobrazení assetů
+\item /assets/tags/:tagId - podle ID tagu vrací assety
+ \end{itemize}
+
+\section{Front-end}
+\subsection{Vytvoření nové aplikace v knihovně React}
+V nové složce s názvem Front-end byla vytvořena nová aplikace knihovny 'React' pomocí příkazu npm create-react-app Front-end --typescript. Výchozí port takto vytvořené aplikace je 3000. Ve složce se objevily soubory:
+
+\begin{itemize}
+\item package.json - obsahuje metadata, skripty a názvy využitých knihoven
+\item package-lock.json - "zámek" pro verze knihoven využitých v aplikaci. Nové verze jednotlivých knihoven mohou ohrozit chod aplikace a tudíž je nutné jejich verze "uzamčít".
+\item gitignore - seznam souborů, které nemají být zaverzovány systémem git
+\item README.md - obsahuje informace ohledně aplikace knihovny React
+\end{itemize}
+
+a složky:
+\begin{itemize}
+\item public - soubory pro vytvoření výchozí aplikace knihovny React %ZJISTIT O CO KURVA JDE
+\item src - soubory pro samotný zdrojový kód %lépe popsat
+\item node-modules - obsah používaných knihoven
+\end{itemize}
+
+Pomocí příkazu npm start se aplikace spustí. Každá webová aplikace či stránka využívá jazyk HTML, který spouští soubor index.html, což je v projektu zastoupeno souborem index.tsx. V aplikaci React je v něm standardně jen spouštěna hlavní aplikace (App.tsx) metodou ReactDOM.render %dopsat.
+V souboru se nachází také metoda serviceWorker.unregister(), která umožňuje rychlejší práci v režimu offline. V hlavním souboru App.jsx je voláno vykonání souboru AssetsList, která je v případě tohoto projektu reálným mozkem celého front-edu.
+
+\subsection{Struktura hlavního souboru}
+Soubor AssetsList.tsx je jádrem celého programu, neboť je v něm reálně obsaženo vše, co se zobrazuje na straně klienta. V souboru, který plní takovou funkci by ideálně mělo být co nejméně kódu, protože správná aplikace knihovny React je v podstatě kompozice komponent, a tyto komponenty by měly být rozděleny do jednotlivých menších souborů, které jsou v tomto jádru pouze zavolány. Úplně nahoře v kódu se tedy nachází seznam importů, což je typické. 
+
+Následuje definice globálních konstant, což je v případě této práce pouze 
+PAGE\_ OFFSET\_SIZE
+, což určuje změnu strany vyhledávání assetů. Vzhledem k tomu, že je aplikace psána v jazyku TypeScript, je nutné pro jednotlivé objekty nadefinovat, o jaké datové typy se pro každou položku každého objektu jedná. Následuje deklarace stavových komponent třídy AssetsList, která udává, jaký je stav aplikace při jejím spuštění. Stav je kromě komponent tříd možné řešit v Reactu i pomocí tzv. Hooků, což jsou funkce, které se volají do jádra Reactu a k dané informaci se "zaháčkují". Funkce componentDidMount je funkcí z React Lifecycle, která se zavolá při připojení komponent do DOM.  Dále se zde nachází seznam funkcí, které jsou v zásadě dvou typů. Funkce měnící stav aplikace lokálně a funkce měnící stav aplikace využívající requesty. Pro práci s requesty je využívána knihovna Axios, která umožňuje jednoduchými příkazy posílat na jednotlivé endpointy requesty.
+
+\subsection{Optimalizace}
+Při vytváření první verze aplikace nebyl kladen důraz na rychlost aplikace, tudíž nebylo překvapující, že po nasazení reálné databáze na server byla aplikace prakticky nefunkční skrz svoji pomalou odezvu. Aplikaci knihovny React lze optimalizovat několika způsoby. Pokud je aplikace knihovny React vytvořena za pomocí create-react-app, lze využít příkaz "npm run build". Tento příkaz přetvoří soubory tak, aby byly vhodné pro nasazení na produkci, čímž je oklešťuje o funkcionalitu, kterou není nutné v produkci používat. 
+
+Nejvyšší míry optimalizace front-endu dosáhneme minimalizací nutnosti přerenderování obsahu aplikace při manipulaci s jednotlivými komponenty. Potlačení nutnosti přerenderování provádí právě VirtualDOM, který porovnává stav reálného DOM s uloženým stavem, a až při detekci změny DOM přerenderuje. 
+
+Posílit tento efekt lze metodou React.memo(), která zapouzdří svůj obsah a zapamtuje si výsledky zapouzdřených funkcí při jejich volání. Pokud nedošlo v zapouzdřené funkci k žádné změně, posílá se jako její výstup pouze reference na položku s výsledkem v paměti, což je z principu méně náročný proces, než znovuprovedení dané zapouzdřené funkce. Tímto způsobem urychluje běh aplikace i metoda shouldComponentUpdate() třídy React.PureComponent.
+
+Další možností jak zrychlit chod aplikace je optimalizace back-endu a databáze. Pro databáze lze využít např. indexování nebo klíčové slovo EXPLAIN.
+
+\subsection{Komponenty}
+Pro přehlednost a optimalizaci je důležité rozdělit hlavní soubor do vícero souborů tak, aby s nimi bylo možné odděleně manipulovat. Front-end tohoto projektu se skládá z několika komponent, které budou v následujícím textu popsány. Na začátku každého komponentového souboru se nachází seznam importů a definice datových typů pro jazyk TypeScript.
+
+\subsubsection{Tlačítka pro obrázky}
+Pro splnění úkolu vyhledávání pomocí binárního kritéria byl zvolen seznam tlačítek s názvy tagů, které na kliknutí zobrazí v seznamu assetů ty assety, které daný tag obsahují. Pro smysluplnější zobrazení je využito souboru bbox\_label\_600\_hierarchy, který byl pro přehlednost přejmenován na TagsHierarchyTree. Tento soubor obsahuje stromovou strukturu tagů, které jsou rozřazeny do subkategorií. Jednotlivé položky této struktury obsahují tagID obrázků přímo ze zdrojové stránky databáze obrázků. Vzhledem k tomu, že tyto unikátní tagID byly zachovány, lze poměrně jednoduše jména tagů podle jejich ID na stromovou strukturu nasadit. Tato komponenta rozšiřuje React.PureComponent, díky čemuž dochází k optimalizaci. Pro namapování všech zanoření stromové struktury byl použit rekurzivní algoritmus. Při shodě tagID stromové struktury a tagID z databáze je tady tento tag vyobrazen jako tlačítko v rolovacím odrážkovém seznamu.
+
+\subsubsection{Tlačítka pro videa}
+Pro vyobrazení seznamu videí byla využita funkce getTagsByType, pomocí které lze získat seznam tagů pro videa filtrací stromové struktury tagů z předchozího bodu. Tyto zbylé tagy jsou potom v render funkci namapovány a zobrazeny jako samostatný rolovací seznam.
+
+\subsubsection{Slidery}
+Slider, neboli jezdec, je grafický element, pomocí kterého lze nastavit určitou hodnotu pohybem indikátoru v určitém rozmezí. Pro elegantnější vzhled komponenty byla použita knihovna react-input-slider. Slidery v tomto programu ovlivňují rozsah filtru, který určuje, které položky se zobrazí, a to za pomocí creationYear - roku vytvoření. Komponenta vytvoří dva slidery, které reprezentují creationYearFrom (rok vytvoření od) a creationYearTo (rok vytvoření do). Dále je možné nastavit nejmenší možný krok, který pohyb slideru způsobí, což je v tomto případě jeden rok. V programu AssetsList jsou tyto slidery propojeny s vyhledávačem, tudíž reálně omezují výsledky vyhledávání při kliknutí na tlačítko submit. Pro optimalizaci byla komponenta zaobalena metodou React.memo().Tato komponenta je řešením vyhledávání z rozsahu.
+
+\subsubsection{Input}
+Input, neboli vstup, je lišta, do které může uživatel psát text. Při stisknutí tlačítka submit se tento vstup zpracuje do requestu, který je poté odeslán na server. Server vrátí výsledky profiltrované podle zadaného parametru. Odpovídající výsledky jsou všechny assety obsahující vyhledávaný výraz v seznamu tagů. Tudíž při vyhledávání "x" se zobrazí např. assety s tagem "Saxophone", "Box" nebo "Taxi".  Ve výchozím stavu obsahuje lišta prázdný string. Aby se při každé změně obsahu lišty stránka nepřerenderovala, je metoda ukládající stav lišty z funkce render() vyjmuta. Aby bylo zabráněno zaslání velkého množství requestů najednou, byla vytvořena funkce loading, která tlačítko submit vypíná, dokud se výsledky vyhledávání nezobrazí.
+
+\subsubsection{Zobrazení seznamu tagů}
+Vzhledem k tomu, že u videí nejsou obsaženy miniatury a grafická prezentace je předmětem až navazující práce, byla zvolena možnost dvojího zobrazení výsledků pomocí jejich typů. Tyto typy jsou "video" a "image". Pokud se jedná o video, je zobrazen název a text "click to download" s odkazem ke stažení daného videa. Obrázky se ve vyhledávání zobrazují zmenšeně. Oba druhy zobrazení disponují ještě tlačítkem "show details", při jehož stlačení se zobrazí výčet tagů, které daný obrázek či video obsahuje.
+
+\section{Grafika}
+Stylizace stránky byla provedena zejména využitím knihovny Reactstrap, odnože Bootstrap. Nativní značky jazyka HTML byly z velké části zaměněny za elegantnější a moderněji vypadající elementy knihovny Reactstrap. Celý zobrazený obsah byl zabalen do grid systému Bootstrapu, který funguje na základě jednoduchého rozložení stránky na řady a sloupce. Dále byla vyměněna všechna HTML tlačítka <button> za <Button> Reactstrapu, které nabízí nové možnosti jejich zobrazení. Načítání stránky nyní znázorňuje točící se kolečko - Spinner. 

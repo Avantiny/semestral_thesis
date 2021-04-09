@@ -1,0 +1,234 @@
+\chapter{Teorie webových aplikací}
+\section{Full-stack aplikace}
+Pro úspěšné vytvoření webové aplikace je nutné pochopit celý proces jejího vývoje. Webová aplikace se všemi funkčními komponenty se označuje jako "Full-stack aplikace". Jedná se o rozsáhlé téma, které je možné rozdělit do několika kategorií popisujících určitou oblast jejího vývoje. Programátor, který rozumí všem částem procesu tvorby webových aplikací se označuje jako „Full-stack developer".  Nejzákladnější rozdělení v praxi využívá čtyř oblastí:
+
+\begin{itemize}
+\item Back-end
+\item Front-end
+\item Databáze
+\item DevOps
+\end{itemize}
+
+Back-end označuje veškeré procesy probíhající na straně serveru. Předmětem back-endu je logika a zpracování dat. Front-end označuje veškeré procesy odehrávající se na straně klienta. Předmětem front-endu je vzhled, viditelný obsah a struktura webové aplikace. Zatímco front-end využívá standartně tři jazyky: HTML, CSS a JavaScript, pro řešení back-endu se nachází velké množství alternativ, ze kterých je nutné si vybrat. Jednou z možností je využití Node.js, umožňující psaní back-endu v jazyku JavaScript. V databázi jsou uschována data, které jsou využívány webovou aplikací. Oblast DevOps se poté zabývá nasazováním aplikace na server.
+
+\subsection{Editor kódu}
+Jako software pro zpracování kódu byl použit Visual Studio Code. Jeho výhodou je kromě atraktivního vzhledu také podpora velkého množství rozšíření pro nejrůznější programovací jazyky, jako jsou např. našeptávače a nástroje pro formátování zdrojového kódu. Kromě toho je v něm velmi pohodlná správa verzování systémem Git a za zmínku stojí i možnost uzpůsobení si vzhledu podle představ uživatele. Do editoru je možné nahrát velké množství nejrůznějších rozšíření pro prakticky jakýkoliv jazyk.
+% https://www.youtube.com/watch?v=lAT9kahUMH4
+
+\subsection{HTML}
+Hypertext Markup Language (HMTL) je značkovací (tagovací) jazyk, pomocí kterého se vytváří webové stránky. Označení "hypertext" znamená, že jednotlivé stránky jsou propojeny pomocí odkazů. Jedná se o standardní jazyk podporovaný všemi běžnými prohlížeči a vývojář je díky němu schopen říct, jakým způsobem má daný prohlížeč zpracovávat a formátovat text.
+
+Pomocí elementů, které HTML poskytuje, je vývojáři umožněno pracovat s velikostí textu a rozhodnout, zdali bude vypsán tučně či kurzívou, importovat do dokumentu obrázky a animace ve formátu GIF, vytvářet formuláře, rámečky a tabulky. Na pozadí stránky a do tabulek je možné pomocí HTML přidat i barvu. Nevýhodou HMTL je, že se jedná o jazyk statický, a tudíž není možné v něm vytvořit např. vysouvací menu a další, běžně používané elementy. Tagy (značky) využívají v jazyce HTML syntax <tag></tag>, kde "/" označuje konec působiště daného tagu. Tyto značky lze podle jejich významu rozdělit na tři skupiny - strukturální, popisné a stylistické.\cite{Pisek}
+
+Zdrojový kód HTML dokumentu je vždy obalený ve značce <html> - kořenovém elementu. Každý HTML dokument obsahuje alespoň dva elementy. Tím jsou elementy <head> a <body>. V elementu <head> - hlavičce souboru - jsou obsaženy informace o dokumentu, které se přímo v prohlížeči nezobrazují. V elementu <body> - těle dokumentu - se téměř vždy nachází většina kódu. Na začátku každého html souboru bývá standartně deklarován typ dokumentu pomocí komentáře <!DOCTYPE html>.  V dokumentu je nutné dodržovat tzv. nesting, kdy vnořený element musí mít svůj začátek i konec mezi začátkem a koncem tagu vnějšího. HTML disponuje mnoha tagy, které plní různé funkce. Mezi ty nejzákladnější patří:
+
+
+\begin{itemize}
+\item <h1>(až <h6>) - velikost nadpisu
+\item <p> - odstavec
+\item<div> - oddíl
+\item<span> - úsek textu
+\item<strong> - tučný text
+\item<em> - kurzíva
+\item<ul> - odrážkový seznam
+\item<ol> - číslovaný seznam
+\item<li> - položka seznamu
+\item<a href> - hyperlinkový odkaz
+\item<img> - obrázek
+\item<table> - tabulka
+\item<form> - formulář
+\item<button> - tlačítko
+\end{itemize}
+
+Jazyk HTML má ve světe IT již dlouhou historii, neboť jeho oficiální vydání se datuje k roku 1990. Mezi další významné průlomy tohoto období lze zařadit protokol HTTP a WorldWideWeb. V současné době je nejnovější verzí HTML 5.3. Kromě HTML existuje i jazyk XHTML, kde význam písmena X je slovo "extensible" - rozšiřitelný. Mělo se jednat o nástupce jazyka HTML, reálně však svého předchůdce z trhu nevytlačil. \cite{Wrox}
+
+\subsection{CSS}
+Zkratka CSS znamená Cascading StyleSheets - kaskádové styly. Důvodem vytvoření CSS bylo oddělení správy vzhledu stránky od jejího obsahu (HTML). Sám o sobě je soubor s příponou css nepoužitelný, jeho funkce se projevují až v souboru HTML. Existují tři způsoby deklarace CSS atributů:
+
+\begin{itemize}
+\item přímý styl (inline) - využívá syntax style="..."
+\item stylesheet (internal) - pravidla pro formátování textu jsou zapsána do hlavičky dokumentu mezi tagy <style></style>
+\item externí stylesheet (external) - připojení souboru s příponou css, na který odkazuje tag <link>
+\end{itemize}
+
+Pomocí CSS je uživatel schopen upravovat styly prvků webové stránky či aplikace. Těmito prvky jsou např. fonty, barvy a velikost mezer mezi elementy. Pomocí CSS specifikujeme pravidla, podle kterých se bude daný prvek renderovat. Každý element se skládá ze dvou částí a jejich syntax je následující \{ atribut: hodnota \} \cite{jakpsatweb}
+
+Příklady atributů CSS:
+\begin {itemize}
+\item Background-(color, image, size,...) - mění vlastnosti pozadí
+\item Border-(collapse, color, style, width...) - mění vlastnosti rámečků
+\item Color - mění barvu libovolného prvku
+\item Font-(family, size, style, weight,...) - mění vlastnosti písma
+\item Margin - šířka vnějšího okraje prvku
+\item Opacity - průhlednost
+\item Padding - šířka vnitřního okraje prvku
+\item Text-(align, indent, shadow,...) - mění vlastnosti textu
+\end {itemize}
+
+Jazyk CSS lze využívat od roku 1996. Od roku 2005 je standardní verzí CSS3.\cite{Hauser}
+
+\subsection{JavaScript}
+JavaScript je vysokoúrovňový, objektově orientovaný programovací jazyk. Obecně platí, že pomocí HTML se řeší obsah a informace, CSS slouží k úpravě vzhledu stránky a  JavaScript určuje chování webové stránky či aplikace. V jeho definici se často objevuje i slovo "klientský", neboť běh programu napsaného v JavaScriptu se odehrává na straně klienta, a to ve webovém prohlížeči po stažení aplikace. JavaScript je ve výchozím stavu asynchronní, což znamená, že kód nečeká na dokončení kódu předchozího, a rovnou pokračuje v dalších úkonech. Také se jedná o jednovláknový jazyk, tudíž kód probíhá postupně za sebou, ze shora dolů.\cite{Dean}
+
+\subsection{DOM}
+DOM je rozhraní, které využívají prohlížeče. Využívá k tomu uzly (node), což jsou v podstatě HTML elementy. DOM samotný reprezentuje stromovou strukturu těchto elementů. Lze jej využít také pro reprezentaci dokumentů XML a XHTML. Chová se jako API, tudíž umožňuje programům číst a manipulovat obsahem, strukturou a styly dané webové aplikace. U náročných aplikací mohou s DOM nastat problémy s rychlostí, neboť pracuje s reálnými komponenty webové aplikace.
+
+
+\subsubsection{ECMAScript}
+ Aby bylo možné pochopit význam vzniku ECMAScriptu, je nutné uvést několik událostí v historii vývoje JavaScriptu. JavaScript byl vytvořen v roce 1995 společností Netscape a prošel si několika změnami jména. JavaScript se jako jméno ustálilo z marketingových důvodů, neboť Java byl v té době velmi populární jazyk. Netscape využíval JavaScript ve svém prohlížeči Netscape Navigator, který byl ve své době na trhu dominantním prohlížečem. Problém nastal, když se firma Microsoft rozhodla prorazit na trh s vlastním prohlížečem, který využíval obdobu JavaScriptu zvanou JScript. Tyto jazyky sice sdílely kompatibilní jádro, rozšířené schopnosti ale ucelené a sjednocené nebyly a tím vznikala spousta problémů jak na straně tvůrců stránek, tak na straně návštěvníků. Řešením byla standardizace asociací ECMA, jejíž výstupem byla první verze jazyka "ECMAScript". \cite{pravek} S rozvojem webových aplikacích rostla také nutnost JavaScript postupně aktualizovat a přinášet nové nástroje. Od roku 2015 vychází každý rok nový update, přinášející nové funkce a vylepšení. Z těchto nových funkcí za zmínku stojí:
+
+\begin{itemize}
+\item ECMAScript 2015
+\begin{itemize}
+\item Arrow funkce
+\item Třídy (Class)
+\item Import/Export
+\item Konstanty (deklarace pomocí klíčového slova "const")
+\item Promises
+\item template literal
+\end{itemize}
+\item ECMAScript 2016
+\begin{itemize}
+\item Destrukturalizace
+\item Klíčová slova async/await
+\end{itemize}
+\item ECMAScript 2017
+\begin{itemize}
+\item Třítečkový operátor
+\end{itemize}
+\end{itemize}
+%https://www.youtube.com/watch?v=JpwxjkpZfhY
+
+\subsubsection{JSON}
+JavaScript Object Notation (JSON) je velmi populární formát reprezentující data, využívaný zejména pro API a konfigurační soubory. JSON soubor obsahuje "zprávu", jejíž "poslem" je API. Očekávaný výstup souboru JSON často bývá objekt, možností je však více.  Klíče a hodnoty jsou v JSON souboru vždy v uvozovkách. Pro zpracování souborů ve formátu JSON je nutné jej prvně rozparsovat - provést syntaktickou analýzu. Syntax této metody je v jazyku JavaScript následující: "JSON.parse(názevSouboru)". JSON ve výchozím stavu podporuje datové typy:
+\begin{itemize}
+\item Řetězec (String)
+\item Číslo (Number)
+\item Boolean
+\item null
+\item Pole (Array)
+\item Objekt (Object)
+\end{itemize}
+%https://www.youtube.com/watch?v=iiADhChRriM
+
+\subsection{Knihovny rozšiřující JavaScript}
+Existuje velké množství způsobů, jak si programátor může ulehčit svoji práci. K tomuto účelu slouží knihovny, které plní určité služby, jenž by bylo složitější nebo časově náročnější programovat ručně. Knihovna shromažďuje do jednoho či více souborů procedury a funkce, se kterými programátor dále pracuje ve svém zdrojovém kódu. Některé z těchto knihoven se staly díky svému využití velmi oblíbenými. Pro rozšíření nativního JavaScriptu v semestrální práci byly kromě jiných použity tyto knihovny:
+
+\subsubsection{Babel}
+V současné době není podpora všech schopností jazyka JavaScript na všech prohlížečích stejná. Aby nebylo nutné programy napsané v nejnovějších verzích JavaScriptu přepisovat ručně pro všechny verze všech prohlížečů, vznikl nástroj zvaný Babel. Kompilátor automaticky převádí kód tak, aby bylo možné jej spustit z každé starší verze prohlížeče. Tímto způsobem řešíme problém se zpětnou kompatibilitou. \cite{babel} Uveďme příklad:
+
+\begin{lstlisting}
+//Zápis arrow funkce z ES5
+[1, 2, 3].map((n) => n + 1); 
+//Převod na starší syntax ES
+[1, 2, 3].map(function(n) { 
+  return n + 1;
+}); 
+\end{lstlisting}
+
+\subsubsection{TypeScript}
+Vzhledem k tomu, že JavaScript není typovým  jazykem (datové typy u něj není nutné deklarovat a ošetřovat), může se jevit jako jednodušší pro začátečníky. Reálně se však typové programování může velmi hodit pro kontrolu vlastního kódu. TypeScript je rozšíření JavaScriptu, které ovšem pracuje s datovými typy, což činí kód přehlednějším, protože je vždy možné zjistit, jaký datový typ je očekáván např. na vstupu funkce. Je vhodné jej využívat zejména na větších projektech s velkým množstvím řádků kódu, avšak i u menších projektů může možnost ověření správné implementace statických typů kódu zpříjemnit práci programátora. Při instalaci knihoven je nutné doplnit předponu @types, která značí, že program bude psán v TypeScriptu a konkrétní knihovna tomu musí být přizpůsobena. V součásné době bylo komunitou kolem TypeScriptu otypováno přes 1000 knihoven jazyka JavaScript. Většina populárních knihoven pro JavaScript tudíž obsahuje i přizpůsobení pro TypeScript. TypeScript kromě své hlavní funkce otypování obsahuje i několik jiných rozšíření. Jedním z nich je metoda enum, která slouží jako výčet hodnot.\cite{TypeScript}
+
+\subsubsection{ESLint}
+Jedná se o nástroj sloužící pro upozornění programátora na problémy a chyby, které činí kód nekonzistentním a mohly by se projevit v budoucnu. Jedná se o druh softwaru Lint, jehož obdoby lze využít pro mnoho programovacích jazyků. ESLint po zjištění chyby odkáže uživatele na možné místo či oblast vzniku této chyby. Jeho konfiguraci provádíme v souboru .eslintrc. V něm najdeme soubor pravidel, díky kterým si můžeme určit, zdali kompilátor bude hlásit chybu, varování, nebo jestli bude problém ignorovat. ESLint zamezí možnosti spustit kód, který by sice bylo možné zkompilovat, ale obsahuje programátorské či stylistické chyby. \cite{ESLint}
+
+\subsubsection{Prettier}
+Prettier je knihovna sloužící k formátování kódu a podporuje mnoho jazyků. Po jeho nainstalování se s každým uložením kód sám zformátuje pro optimální čitelnost, jednotnost a přehlednost. Lze jej jednoduše integrovat pomocí většiny editorů kódu. Konfigurace knihovny se provádí v souboru .prettierrc.
+
+\section{Back-end}
+\subsection{Node.js}
+Node.js je softwarový systém/runtime prostředí umožňující běh JavaScriptu mimo webový prohlížeč. Tento systém využívá V8 JavaScript engine vyvinutý společností Google a k němu několik knihoven, které skládá v jeden celek. Díky Node.js je nyní umožněno spouštění javascriptového programu mimo prostředí prohlížeče, typicky na straně serveru, tudíž jde v tomto jazyku psát i back-end, což nebylo dříve možné. Při využití systému node.js se v reálném JavaScriptovém programu vytvoří složka node-modules, do které se jednotlivé balíčky instalují. Výhodou node.js je rychlost a vysoká škálovatelnost. \cite{Node} \cite{Pedro}
+
+\subsubsection{NPM}
+Node package manager je výchozí správce Javascriptových balíčků Node.js. Používá se pomocí klíčového slova npm v příkazové řádce. Většina knihoven pro JavaScript se instaluje právě přes NPM příkaz. Oblíbenou alternativou k NPM je Yarn.
+
+\subsection{HTTP Protokol}
+HTTP Protokol je nejpoužívanějším protokolem na internetu. Zkratka HTTP znamená Hypertext Transfer Protocol a slouží ke komunikaci mezi World Wide Web servery. HTTP funguje na základě rodiny protokolů TCP/IP, umožňujících komunikaci v počítačové síti. Lze o něm smýšlet jako o poslu internetu. Přes HTTP je možné zaslat jakýkoliv druh dat, pokud jsou obě strany komunikace schopny tato data zpracovat. HTTP nevytváří mezi serverem a klientem stálou vazbu, tudíž po splnění své funkce zůstávají obě strany nepropojené, dokud nepřijde další dotaz. \cite{http}Typická HTTP zpráva se skládá ze tří až čtyř částí:
+ 
+\begin{itemize}
+\item Start-Line - popisuje dotazy, které mají být vykonány a status o jejich provedení
+\item HTTP headers - specifikují dotazy a popisují obsah těla zprávy
+\item prázdný řádek
+\item body (tělo) - obsahuje veškerá data spojená s dotazem nebo dokument s odpovědí
+\end{itemize}
+
+%https://www.youtube.com/watch?v=eesqK59rhGA nn
+\subsection {REST API}
+API je zkratka pro Application Programming Interface (Rozhraní programovacích aplikací). API slouží k propojení nehomogenních systémů a zprovozňuje komunikaci mezi nimi. REST je zkratka pro Representational State Transfer a je to architektura, pomocí které lze přistupovat k datům přes metody protokolu HTTP. REST je datově orientovaný a k přístupu k datům či stavům aplikace používá zdroje (resources). Data přenesená touto architekturou jsou standardně ve formátu JSON.\cite{API} \cite{zdrojak} REST využívá čtyři metody komunikace pod označením CRUD, což znamená:
+
+\begin{itemize}
+\item Create (POST) - vytvoření dat
+\item Retrieve (GET) - získání požadovaných dat
+\item Update (PUT) - změna dat
+\item Delete (DELETE) - smazání dat
+\end{itemize}
+
+\subsection{Express}
+Express je rozhraní pro Node.js, které zjednodušuje komunikaci se serverem. Můžeme pomocí něj definovat cesty (routes) a specifikace, jak se má program chovat, když na server přijde dotaz (request), který je schopen sám rozložit na jednotlivé elementy - rozparsovat jej . Express je také schopen převádět objekty a pole na JSON. Pomocí app.listen(port) potom na konkrétním portu Express "naslouchá" dotazům od klienta a vrací požadovanou odpověď. Celý tento proces je založený na dědičnosti z HTTP prototypů využívaných v systému Node. Zjednodušení spočívá v tom, že odpovědi (responses) ze serveru zasíláme jako celek a program si sám zpracuje, jak se má v dané situaci chovat. \cite{MERN Stack}
+
+%https://www.youtube.com/watch?v=IjXAr5CJ2Ec
+
+\subsection{AJAX}
+je zkratka pro "Asynchronní JavaScript a XML". Jedná se o kombinaci technologií HTML (XHTML), JavaScriptu, XML a XMLHttpRequest. Pointa spočívá v možnosti odeslání a získání dat ze serveru, přičemž není nutné přenahrávat celou stránku. Typickým využitím AJAX jsou např. našeptávače, kdy se mění pouze samotná komponenta a celá stránka se nepřehrává. Název AJAX může být lehce zavádějící, neboť standardně se místo formátu XML využívá formát JSON. Díky tomu, že JSON není výchozím formátem technologie AJAX, je nutné využít metodu "parse". \cite{Ajax}
+
+\subsection{CORS}
+V prohlížečích je ve výchozím stavu zavedena zásada stejného původu - stránka vychází ze stejného serveru, z kterého čerpá data. Aby bylo možné komunikovat i s jinými servery, je nutné využít doplňkový protokol CORS (Cross-Origin Resource Sharing). Tento protokol uvádí standardní pravidla pro komunikaci mezi prohlížečem a serverem tak, aby ajaxové aplikace měly přístup i ke zdrojům dat z jiné domény. Při využití CORS bývají v komunikaci zasílány tzv. preflight requests, pomocí kterých se aplikace ptá serveru, zdali mu bude přístup k datům udělen. \cite{CORS}
+
+\subsection{Objektově relační mapování}
+Objektově relační mapování (ORM) je způsob ukládání, získání, aktualizování a mazání dat z objektově orientovaného programu do relační databáze. Díky ORM je možné automatizovat proces konverze objektů do údajů, které je relační databáze schopna zpracovat. Programátor je tedy odstíněn od nutnosti práce s databází přímo v relační databázi, ale může ji spravovat pomocí vybraného objektově orientovaného programovacího jazyka. Pro Node.js je jednou z nejpoužívanějších softwarů pro ORM knihovna Sequelize.
+%https://www.youtube.com/watch?v=dHQ-I7kr_SY nn
+
+\section{Front-end}
+\subsection{React}
+React je open source knihovna pro vytváření uživatelských rozhraní pomocí webových komponent. Klade velký důraz na interaktivitu a dynamičnost. Filozofií Reactu je uchopení UI jako kompozici menších komponent, které se spojují v jeden celek. Velmi často se používá ke sloučení HTML a JavaScriptu do jednoho zdrojového kódu. Označuje se jako "V" v MVC modelu, což je zkratka pro Model-View-Controller, jakožto popis jeho atributů. \cite{React}
+
+\begin{itemize}
+\item Model - spravuje data a pravidla aplikace
+\item View - výstup, využívá DOM (Document Object Model) prohlížeče
+\item Controller - vstup od uživatele, který je konvertován na příkazy pro Model a View\cite{Mosh}
+\end{itemize}
+
+V současné době se pro vytváření front-endu hojně využívají také knihovny Angular.js, Vue.js a Svelte.
+
+\subsection{Virtual DOM}
+Virtual DOM je s každou změnou vždy znovu vytvořený přímo Reactem a jeho výhodou je, že pomocí klíčů pouze zjišťuje změny mezi aktuální a předchozí verzí webové aplikace, jejiž stav si zaznamenal, a podle kterých potom upravuje aktuální stav. Když Virtual DOM zjistí změnu, upravuje v reálném DOM pouze tuto změnu. Algoritmy Virtual DOM jsou navrženy tak, aby probíhaly co nejrychleji.
+\cite{VirtualDOM}
+
+\subsection{JSX}
+Je syntaktické rozšíření jazyka JavaScript. JSX se podobá jazyku HTML, proto je pro mnoho uživatelů přívětivý. Vytváříme pomocí něj elementy Reactu. Filozofií JSX je sloučení logiky programu a UI a vytváří jednotky zvané "komponenty". Pro převádění jazyka zpět do JavaScriptu, HTML a CSS je využíván kompilátor Babel. React explicitně nevyžaduje využití JSX, většina uživatelů ho však používá. Aby bylo možné použít JSX s TypeScriptem, používáme typovou verzi JSX s názvem TSX.\cite{JSX}
+
+\subsection{Axios}
+Je knihovna pro vytváření HTTP requestů založená na tzv. "promises", díky čemuž lze používat funkce "async" a "await". Funguje v prohlížeči i systému node.js. Axios podporuje starší verze prohlížečů, automaticky provádí transformaci JSON dat a lze díky němu např. zrušit request či nastavit "response timeout". \cite{Axios}
+
+\subsection{Bootstrap a Reactstrap}
+Jedná se o knihovny s velkým množstvím nástrojů pro stylizaci a grafickou úpravu webových aplikací. Konkrétně Bootstrap je nejpoužívanější knihovnou pro tvorbu front-endového UI vůbec. Bootstrap je vyhlášený mj. díky svému grid systému, který automaticky upravuje rozložení jednotlivých elementů na stránce. Je také přizpůsoben mobilním zařízením. Reactstrap je rozšířením Bootstrapu pro knihovnu React. \cite{boot}
+
+\section{Databáze}
+Databáze je systém pro ukládání dat, které jsou následně zpracovány. Tyto údaje jsou v databázi systematicky organizované a strukturované. Pomocí skriptů je možné s daty v databázi pracovat a upravovat je. Každá databáze má svoje pravidla pro práci s údaji.
+
+Mezi databázemi mohou být tři typy vztahů, které jsou uvedeny na příkladech:
+\begin{itemize}
+\item 1:1 - V tradičním manželství může být žena provdaná za jednoho muže a muž se může oženit s jednou ženou 
+\item 1:N - Dítě má pouze jednu biologickou matku, matka však může mít vícero dětí
+\item N:M - Student si může zapsat mnoho předmětů a v předmětu může být zapsáno mnoho studentů\cite{mnoo}
+\end{itemize}
+
+\subsection{MariaDB}
+MariaDB je relační databáze odvozená z MySQL. Její výsostí je, že se jedná o open source program. Další výhodou je kompatibilita s většinou vlastností MySQL. MariaDB slouží k uchovávání dat v tabulkách, ve kterých jsou obsaženy záznamy tak, že na jedno pole připadá právě jedna reálie. Tabulky jsou organizovány do řádků a sloupců.\cite{MariaDBC}
+
+\subsection{Dostupné databáze s otagovanými obrázky a videi}
+Jako databáze pro testování byla zvolena pátá verze Open Images Dataset, dostupná z "https://storage.googleapis.com/openimages/web/factsfigures.html" . Jedná se o největší databázi s obrázky s anotovanou lokací objektů. Pro videa byla zvolena databáze UFC101, dostupná z "http://www.thumos.info/download.html". Obě knihovny jsou odvozené z projektů sloužících ke strojovému učení rozeznávání jednotlivých objektů na obrázku/videu.
+
+%https://storage.googleapis.com/openimages/web/factsfigures.html
+
+\section{Možnosti ovládání aplikace pomocí interaktivních ovladačů}
+Praktická stránka ovládání aplikace pomocí interaktivních ovladačů byla po domluvě s vedoucím práce přesunuta jako jeden z úkolů v navazující bakalářské práci. Po nasazení na server bude aplikace testována na možnost ovládání dotykem. Tato funkcionalita by měla být řešena v rámci prohlížečů na mobilních zařízeních. Vzhledem k tomu, že reálná aplikace by měla být spouštěna právě jen v prohlížečích, nemělo by být nutné se problematikou dotyku dále zabývat. Pro ovládání stránky herním ovladačem lze využít Gamepad API, což je rozšíření pro HTML5 vytvořené přesně pro tento účel. Jednotlivým signálům vysílaným z ovladače lze potom přiřadit specifickou funkci. Gamepad API se skládá ze tří rozhraní. \cite{game}
+
+\begin{itemize}
+\item Gamepad - reprezentuje ovladač připojený k počítači
+\item GamepadButton - představuje tlačítko ovladače
+\item GamepadEvent - je objekt reprezentující situace, které nastanou při používání herního ovladače
+\end{itemize}
+
+Podobně lze v prohlížeči využívat i akcelerometr, a to pomocí podtřídy Sensor API - accelerometer, což je rozhraní, které je schopné číst zrychlení probíhající na všech třech osách. Aby bylo možné s tímto API pracovat, je nutné jej povolit v Permissions API prohlížeče.\cite{Akcel}
+
